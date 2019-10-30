@@ -40,8 +40,6 @@ api.add_resource(auth.UserLogoutAccess, '/logout/access')
 api.add_resource(auth.UserLogoutRefresh, '/logout/refresh')
 api.add_resource(auth.TokenRefresh, '/token/refresh')
 api.add_resource(auth.AllUsers, '/users')
-api.add_resource(auth.SecretResource, '/secret')
-
 
 from .routes import kv_routes
 
