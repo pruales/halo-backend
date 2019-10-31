@@ -4,11 +4,13 @@ from flask import Flask
 from flask_restful import Api
 from flask_sqlalchemy import SQLAlchemy
 from flask_jwt_extended import JWTManager
-
+from flask_cors import CORS
+from datetime import timedelta
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 
 app = Flask(__name__)
+CORS(app)
 @app.before_first_request
 def create_tables():
     db.create_all()
@@ -19,8 +21,9 @@ app.config['SECRET_KEY'] = 'some-secret-string'
 db = SQLAlchemy(app)
 
 app.config['JWT_SECRET_KEY'] = 'jwt-secret-string'
+app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(days=30)
 app.config['JWT_BLACKLIST_ENABLED'] = True
-app.config['JWT_BLACKLIST_TOKEN_CHECKS'] = ['access', 'refresh']
+app.config['JWT_BLACKLIST_TOKEN_CHECKS'] = ['access']
 
 jwt = JWTManager(app)
 
@@ -37,8 +40,6 @@ from .routes import auth
 api.add_resource(auth.UserRegistration, '/register')
 api.add_resource(auth.UserLogin, '/login')
 api.add_resource(auth.UserLogoutAccess, '/logout/access')
-api.add_resource(auth.UserLogoutRefresh, '/logout/refresh')
-api.add_resource(auth.TokenRefresh, '/token/refresh')
 api.add_resource(auth.AllUsers, '/users')
 
 from .routes import kv_routes

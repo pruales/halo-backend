@@ -21,11 +21,9 @@ class UserRegistration(Resource):
         try:
             new_user.save_to_db()
             access_token = create_access_token(identity = data['username'])
-            refresh_token = create_refresh_token(identity = data['username'])
             return {
                 'message': 'User {} was created'.format(data['username']),
-                'access_token': access_token,
-                'refresh_token': refresh_token
+                'access_token': access_token
             }
         except:
             return {'message': 'Unable to create user'}, 500
@@ -36,18 +34,17 @@ class UserLogin(Resource):
         data = parser.parse_args()
         current_user = UserModel.find_by_username(data['username'])
         if not current_user:
-            return {'message': 'User {} doesn\'t exist'.format(data['username'])}
+            return {'message': 'User {} doesn\'t exist'.format(data['username'])}, 401
         
         if UserModel.verify_hash(data['password'], current_user.password):
             access_token = create_access_token(identity = data['username'])
-            refresh_token = create_refresh_token(identity = data['username'])
             return {
                 'message': 'Logged in as {}'.format(current_user.username),
                 'access_token': access_token,
-                'refresh_token': refresh_token
             }
+
         else:
-            return {'message': 'Wrong credentials'}
+            return {'message': 'Wrong credentials'}, 401
       
       
 class UserLogoutAccess(Resource):
@@ -61,7 +58,8 @@ class UserLogoutAccess(Resource):
         except:
             return {'message': 'Something went wrong'}, 500
       
-      
+
+# Not used but this is how we could implement token refreshing      
 class UserLogoutRefresh(Resource):
     @jwt_refresh_token_required
     def post(self):
@@ -73,7 +71,7 @@ class UserLogoutRefresh(Resource):
         except:
             return {'message': 'Something went wrong'}, 500
       
-      
+# Not used but this is how we could implement token refreshing         
 class TokenRefresh(Resource):
     @jwt_refresh_token_required
     def post(self):
