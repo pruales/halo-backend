@@ -18,9 +18,9 @@ This microservice uses JWT based authentication. For simplicity, the access toke
 The password is hashed using `bcrypt`. Users are stored in a users table with their username, hashed password and id. There is also a revoked token table that stores revoked tokens such as when a user logs out.
 JWTs are managed by [Flask-JWT-Extended](https://flask-jwt-extended.readthedocs.io/en/stable/).
 
-#### API
+### API
 Failed authentication attemps result in 401. Internal errors are 500.
-##### POST `/register`
+#### POST `/register`
 **Body (required)**: 
 ```
 {
@@ -28,7 +28,7 @@ Failed authentication attemps result in 401. Internal errors are 500.
   password: String
 }
 ```
-##### POST `/login`
+#### POST `/login`
 **Body (required)**: 
 ```
 {
@@ -43,16 +43,16 @@ Failed authentication attemps result in 401. Internal errors are 500.
   access_token: String
 }
 ```
-##### POST `/logout/access`
+#### POST `/logout/access`
 **JWT required**
 
 ## Key-Value Store
 Collection items are stored with their key, value, user id, and id. Users only have acces to their own items and they have the ability to add items
 via the front-end. 
 
-#### API
+### API
 
-##### POST `/set`
+#### POST `/set`
 **JWT required**
 **Body (required)**: 
 ```
@@ -62,7 +62,7 @@ via the front-end.
 }
 ```
 
-#### GET `/getAll`
+### GET `/getAll`
 **JWT required**
 
 **200 Response**:
